@@ -2,8 +2,7 @@
 
 **Garmin FIT Exporter** allows you to export some types of fit files to gpx or to markdown.
 
-- What do you need?
-  *Your Garmin watch with a USB connection*
+- What do you need? *Your Garmin watch with a USB connection*
 
 ## REQUIRED
 
@@ -47,6 +46,10 @@ Fit file types that are exported to **markdown**:
 
 The `debug` option allows you to export all types of fit files in raw format.
 The output file will have the extension: **.fit_bak.txt**
+
+#### Main device
+
+**Instinct 2** is the device from which I get the *FIT files* to run the debug tests
 
 ## CONTRIBUTING
 
