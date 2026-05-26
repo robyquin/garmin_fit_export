@@ -40,6 +40,7 @@ if (os.path.isfile(input)):
     filename = str(input)
     act = GarminFitExport(filename)
     file_type = act.file_id.get('type')
+    logging.info("process: {}".format(filename))
     if (args.debug):
         act.debug_tree(output)
     else:
@@ -64,11 +65,11 @@ elif (os.path.isdir(input)):
         filename = str(filename)
         act = GarminFitExport(filename)
         file_type = act.file_id.get('type')
+        logging.info("process: {}".format(filename))
         if (args.debug):
             act.debug_tree(output)
         else:
             if (file_type in ('activity', 'location', 'course')):
-                logging.info("process: {}".format(filename))
                 if (file_type in ('activity', 'course')):
                     Y = act.file_id.get('time_created').strftime('%Y')
                     m = act.file_id.get('time_created').strftime('%m')
