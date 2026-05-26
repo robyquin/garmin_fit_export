@@ -8,26 +8,27 @@ Class Collection of FitMessages.
 
 """
 
+
 class FitMessages():
     """
     Class FitMessages
     """
-    def get(self, key : str) -> list:
+    def get(self, key: str) -> list:
         """
         Get block by key
 
         :param key: key descriptor
         :return: list
         """
-        l = []
+        ll = []
         for elm in self.mesgs:
-            if(key in elm.keys()):
-                l.append(elm[key])
-        if(len(l) == 1):
-            l = l[0]
-        elif(len(l) == 0):
-            l = None
-        return l
+            if (key in elm.keys()):
+                ll.append(elm[key])
+        if (len(ll) == 1):
+            ll = ll[0]
+        elif (len(ll) == 0):
+            ll = None
+        return ll
 
     def key_list(self) -> list:
         """
@@ -38,13 +39,14 @@ class FitMessages():
         list = []
         for elm in self.mesgs:
             for k in elm.keys():
-                if(k not in list):
+                if (k not in list):
                     list.append(k)
-        if(len(list) == 1):
+        if (len(list) == 1):
             list = str(list[0])
-        elif(len(list) == 0):
+        elif (len(list) == 0):
             list = None
         return list
+
 
 class FileId(FitMessages):
     """
@@ -55,6 +57,7 @@ class FileId(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['file_id_mesgs']
 
+
 class FileCreator(FitMessages):
     """
     Class definition of file_creator_mesgs
@@ -63,6 +66,7 @@ class FileCreator(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['file_creator_mesgs']
+
 
 class Event(FitMessages):
     """
@@ -73,6 +77,7 @@ class Event(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['event_mesgs']
 
+
 class DeviceInfo(FitMessages):
     """
     Class definition of device_info_mesgs
@@ -81,6 +86,7 @@ class DeviceInfo(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['device_info_mesgs']
+
 
 class DeviceSettings(FitMessages):
     """
@@ -91,6 +97,7 @@ class DeviceSettings(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['device_settings_mesgs']
 
+
 class UserProfile(FitMessages):
     """
     Class definition of user_profile_mesgs
@@ -99,6 +106,7 @@ class UserProfile(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['user_profile_mesgs']
+
 
 class Sport(FitMessages):
     """
@@ -109,6 +117,7 @@ class Sport(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['sport_mesgs']
 
+
 class TrainingSettings(FitMessages):
     """
     Class definition of training_settings_mesgs
@@ -117,6 +126,7 @@ class TrainingSettings(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['training_settings_mesgs']
+
 
 class ZonesTarget(FitMessages):
     """
@@ -127,6 +137,7 @@ class ZonesTarget(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['zones_target_mesgs']
 
+
 class Record(FitMessages):
     """
     Class definition of record_mesgs
@@ -135,6 +146,7 @@ class Record(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['record_mesgs']
+
 
 class Record2(FitMessages):
     """
@@ -145,6 +157,7 @@ class Record2(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['record2_mesgs']
 
+
 class GpsMetadata(FitMessages):
     """
     Class definition of gps_metadata_mesgs
@@ -153,6 +166,7 @@ class GpsMetadata(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['gps_metadata_mesgs']
+
 
 class Lap(FitMessages):
     """
@@ -163,6 +177,7 @@ class Lap(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['lap_mesgs']
 
+
 class TimeInZone(FitMessages):
     """
     Class definition of time_in_zone_mesgs
@@ -171,6 +186,7 @@ class TimeInZone(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['time_in_zone_mesgs']
+
 
 class Split(FitMessages):
     """
@@ -181,6 +197,7 @@ class Split(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['split_mesgs']
 
+
 class SplitSummary(FitMessages):
     """
     Class definition of split_summary_mesgs
@@ -189,6 +206,7 @@ class SplitSummary(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['split_summary_mesgs']
+
 
 class Session(FitMessages):
     """
@@ -199,6 +217,7 @@ class Session(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['session_mesgs']
 
+
 class Activity(FitMessages):
     """
     Class definition of activity_mesgs
@@ -207,6 +226,7 @@ class Activity(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['activity_mesgs']
+
 
 class Location(FitMessages):
     """
@@ -217,6 +237,7 @@ class Location(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['location_mesgs']
 
+
 class Course(FitMessages):
     """
     Class definition of course_mesgs
@@ -226,6 +247,7 @@ class Course(FitMessages):
     def __init__(self, mesgs):
         self.mesgs = mesgs['course_mesgs']
 
+
 class Workout(FitMessages):
     """
     Class definition of workout_mesgs
@@ -234,6 +256,7 @@ class Workout(FitMessages):
     """
     def __init__(self, mesgs):
         self.mesgs = mesgs['workout_mesgs']
+
 
 class WorkoutStep(FitMessages):
     """
