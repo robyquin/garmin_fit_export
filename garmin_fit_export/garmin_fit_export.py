@@ -212,10 +212,12 @@ class GarminFitExport():
 
         self.log.info("Write: " + output_gpx)
         file_type = self.file_id.get('type')
-        if (file_type in ('activity', 'course')):
-            fgpx = open(output_gpx, 'w')
-            fgpx.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-            fgpx.write("<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1/gpx.xsd\" version=\"1.1\" creator=\"{} {}\">\n".format(__name__, __version__))
+
+        fgpx = open(output_gpx, 'w')
+        fgpx.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+        fgpx.write("<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1/gpx.xsd\" version=\"1.1\" creator=\"{} {}\">\n".format(__name__, __version__))
+
+        if (file_type == 'activity'):
             fgpx.write("\t<trk>\n")
             fgpx.write("\t\t<trkseg>\n")
             for elem in self.record.mesgs:
@@ -230,19 +232,28 @@ class GarminFitExport():
                         fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n\t\t\t</trkpt>\n".format(lat, long, time))
             fgpx.write("\t\t</trkseg>\n")
             fgpx.write("\t</trk>\n")
-            fgpx.write("</gpx>")
-            fgpx.close()
+        elif (file_type == "course"):
+            fgpx.write("\t<rte>\n")
+            for elem in self.record.mesgs:
+                if ("position_lat" in elem.keys() and "position_long" in elem.keys()):
+                    time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
+                    lat = str(elem["position_lat"])
+                    long = str(elem["position_long"])
+                    if ("enhanced_altitude" in elem.keys()):
+                        elev = str(elem["enhanced_altitude"])
+                        fgpx.write("\t\t\t<rtept lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n\t\t\t</rtept>\n".format(lat, long, elev, time))
+                    else:
+                        fgpx.write("\t\t\t<rtept lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n\t\t\t</rtept>\n".format(lat, long, time))
+            fgpx.write("\t</rte>\n")
         elif (file_type == "location"):
-            fgpx = open(output_gpx, 'w')
-            fgpx.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-            fgpx.write("<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1/gpx.xsd\" version=\"1.1\" creator=\"{} {}\">\n".format(__name__, __version__))
             for elem in self.location.mesgs:
                 lat = str(elem["position_lat"])
                 long = str(elem["position_long"])
                 name = str(elem["label"])
                 fgpx.write("\t<wpt lat=\"{}\" lon=\"{}\">\n\t\t<name>{}</name>\n\t</wpt>\n".format(lat, long, name))
-            fgpx.write("</gpx>")
-            fgpx.close()
+        
+        fgpx.write("</gpx>")
+        fgpx.close()
 
     def get_md(self, output_dir: str) -> None:
         """
