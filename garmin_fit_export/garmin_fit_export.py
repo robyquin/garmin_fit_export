@@ -216,7 +216,7 @@ class GarminFitExport():
 
         fgpx = open(output_gpx, 'w')
         fgpx.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-        fgpx.write("<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1/gpx.xsd\" version=\"1.1\" creator=\"{} {}\">\n".format(__name__, __version__))
+        fgpx.write("<gpx version=\"1.1\" creator=\"{} {}\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gpxtpx=\"http://garmin.com\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"https://www8.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\">\n".format(__name__, __version__))
 
         if (file_type == 'activity'):
             if (len(self.lap.mesgs) > 1):
@@ -235,11 +235,27 @@ class GarminFitExport():
                     time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
                     lat = str(elem["position_lat"])
                     long = str(elem["position_long"])
+                    extensions = ''
+                    for other_k, other_v in elem.items():
+                        if (other_k in ('heart_rate', 'temperature', 'cadence', 'distance', 'power')):
+                            if (other_k == 'heart_rate'):
+                                other_k = 'gpxtpx:hr'
+                            elif (other_k == 'distance'):
+                                other_k = 'gpxtpx:depth'
+                            elif (other_k == 'temperature'):
+                                other_k = 'gpxtpx:atemp'
+                            elif (other_k == 'cadence'):
+                                other_k = 'gpxtpx:cad'
+                            elif (other_k == 'power'):
+                                other_k = 'gpxtpx:power'
+                            extensions += "\t\t\t\t\t\t<{}>{}</{}>\n".format(other_k, other_v, other_k)
+                    if(extensions != ''):
+                        extensions = "\t\t\t\t<extensions>\n\t\t\t\t\t<gpxtpx:TrackPointExtension>\n{}\t\t\t\t\t</gpxtpx:TrackPointExtension>\n\t\t\t\t</extensions>\n".format(extensions)
                     if ("enhanced_altitude" in elem.keys()):
                         elev = str(elem["enhanced_altitude"])
-                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n\t\t\t</trkpt>\n".format(lat, long, elev, time))
+                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, elev, time, extensions))
                     else:
-                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n\t\t\t</trkpt>\n".format(lat, long, time))
+                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, time, extensions))
                     if (len(self.lap.mesgs) > lap):
                         if (self.lap.mesgs[lap]['start_time'] < elem["timestamp"]):
                             fgpx.write("\t\t</trkseg>\n")
