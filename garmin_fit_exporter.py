@@ -49,8 +49,10 @@ if (os.path.isfile(input)):
                 Y = act.file_id.get('time_created').strftime('%Y')
                 m = act.file_id.get('time_created').strftime('%m')
                 output = os.path.join(output_dir, file_type + "_gpx", Y, m)
-                if (not os.path.exists(output)):
-                    os.makedirs(output)
+            else:
+                output = os.path.join(output_dir, file_type + "_gpx")
+            if (not os.path.exists(output)):
+                os.makedirs(output)
             act.get_gpx(output)
         elif (file_type in ('workout', 'record')):
             output = os.path.join(output_dir, file_type + "_md")
@@ -74,8 +76,10 @@ elif (os.path.isdir(input)):
                     Y = act.file_id.get('time_created').strftime('%Y')
                     m = act.file_id.get('time_created').strftime('%m')
                     output = os.path.join(output_dir, file_type + "_gpx", Y, m)
-                    if (not os.path.exists(output)):
-                        os.makedirs(output)
+                else:
+                    output = os.path.join(output_dir, file_type + "_gpx")
+                if (not os.path.exists(output)):
+                    os.makedirs(output)
                 act.get_gpx(output)
             elif (file_type in ('workout', 'record')):
                 output = os.path.join(output_dir, file_type + "_md")
