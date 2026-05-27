@@ -52,7 +52,7 @@ class GarminFitExport():
             # self.zones_target = lfm.ZonesTarget(self._messages)
             self.record = lfm.Record(self._messages)
             # self.gps_metadata = lfm.GpsMetadata(self._messages)
-            # self.lap = lfm.Lap(self._messages)
+            self.lap = lfm.Lap(self._messages)
             # self.time_in_zone = lfm.TimeInZone(self._messages)
             # self.split = lfm.Split(self._messages)
             # self.split_summary = lfm.SplitSummary(self._messages)
@@ -219,8 +219,17 @@ class GarminFitExport():
         fgpx.write("<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1/gpx.xsd\" version=\"1.1\" creator=\"{} {}\">\n".format(__name__, __version__))
 
         if (file_type == 'activity'):
+            if (len(self.lap.mesgs) > 1):
+                lap = 1
+                for elem in self.lap.mesgs:
+                    lat = str(elem["end_position_lat"])
+                    long = str(elem["end_position_long"])
+                    name = "Lap " + str(lap)
+                    fgpx.write("\t<wpt lat=\"{}\" lon=\"{}\">\n\t\t<name>{}</name>\n\t</wpt>\n".format(lat, long, name))
+                    lap += 1
             fgpx.write("\t<trk>\n")
             fgpx.write("\t\t<trkseg>\n")
+            lap = 1
             for elem in self.record.mesgs:
                 if ("position_lat" in elem.keys() and "position_long" in elem.keys()):
                     time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
@@ -231,8 +240,13 @@ class GarminFitExport():
                         fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n\t\t\t</trkpt>\n".format(lat, long, elev, time))
                     else:
                         fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n\t\t\t</trkpt>\n".format(lat, long, time))
+                    if (len(self.lap.mesgs) > lap):
+                        if (self.lap.mesgs[lap]['start_time'] < elem["timestamp"]):
+                            fgpx.write("\t\t</trkseg>\n")
+                            fgpx.write("\t\t<trkseg>\n")
+                            lap += 1
             fgpx.write("\t\t</trkseg>\n")
-            fgpx.write("\t</trk>\n")
+            fgpx.write("\t</trk>\n")            
         elif (file_type == "course"):
             fgpx.write("\t<rte>\n")
             for elem in self.record.mesgs:
