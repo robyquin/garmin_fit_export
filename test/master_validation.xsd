@@ -1,0 +1,13 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- GPX 1.1 -->
+    <xs:import
+        namespace="http://www.topografix.com/GPX/1/1"
+        schemaLocation="http://www.topografix.com/GPX/1/1/gpx.xsd"/>
+
+    <!-- Garmin Extensions v3 -->
+    <xs:import
+        namespace="http://www.garmin.com/xmlschemas/GpxExtensions/v3"
+        schemaLocation="http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd"/>
+
+</xs:schema>
