@@ -216,7 +216,7 @@ class GarminFitExport():
 
         fgpx = open(output_gpx, 'w')
         fgpx.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-        fgpx.write("<gpx version=\"1.1\" creator=\"{} {}\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gpxtpx=\"http://garmin.com\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd\" xmlns:gpxtpx=\"https://www8.garmin.com/xmlschemas/TrackPointExtensionv1.xsd\">\n".format(__name__, __version__))
+        fgpx.write("<gpx version=\"1.1\" creator=\"{} {}\" xmlns=\"http://www.topografix.com/GPX/1/1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gpxtpx=\"http://garmin.com\" xmlns:gpxx=\"http://www.garmin.com/xmlschemas/GpxExtensions/v3\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd\">\n".format(__name__, __version__))
 
         if (file_type == 'activity'):
             if (len(self.lap.mesgs) > 1):
@@ -249,7 +249,7 @@ class GarminFitExport():
                             elif (other_k == 'power'):
                                 other_k = 'gpxtpx:power'
                             extensions += "\t\t\t\t\t\t<{}>{}</{}>\n".format(other_k, other_v, other_k)
-                    if(extensions != ''):
+                    if (extensions != ''):
                         extensions = "\t\t\t\t<extensions>\n\t\t\t\t\t<gpxtpx:TrackPointExtension>\n{}\t\t\t\t\t</gpxtpx:TrackPointExtension>\n\t\t\t\t</extensions>\n".format(extensions)
                     if ("enhanced_altitude" in elem.keys()):
                         elev = str(elem["enhanced_altitude"])
