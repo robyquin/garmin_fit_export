@@ -28,7 +28,7 @@ def export_manager(filename: str, output_dir: str, debug=False):
                 output = os.path.join(output_dir, file_type + "_gpx")
             if (not os.path.exists(output)):
                 os.makedirs(output)
-            act.get_gpx(output)
+            act.get_gpx(output, overwrite=False, copy_fit=True)
         elif (file_type in ('workout', 'record')):
             output = os.path.join(output_dir, file_type + "_md")
             if (not os.path.exists(output)):
