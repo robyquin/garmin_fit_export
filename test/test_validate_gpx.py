@@ -1,10 +1,18 @@
 #!python
 
+"""
+Gpx validation test.
+
+:Author: Roberto Quintiliani
+:Copyright: Copyright (c) Roberto Quintiliani
+:License: to be defined
+
+"""
+
 import pytest
 from pathlib import Path
 from lxml import etree
 
-# Carica lo schema master
 schema_doc = etree.parse("./test/master_validation.xsd")
 schema = etree.XMLSchema(schema_doc)
 
