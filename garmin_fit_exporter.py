@@ -11,6 +11,7 @@ logging.basicConfig(format='%(asctime)s - [%(levelname)s] %(message)s',
                     level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+
 def export_manager(filename: str, output_dir: str, debug=False):
     act = GarminFitExport(filename)
     file_type = act.file_id.get('type')
@@ -36,6 +37,7 @@ def export_manager(filename: str, output_dir: str, debug=False):
         else:
             logging.warning("File type: {} not recognized for export"
                             .format(file_type))
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s',
@@ -67,4 +69,3 @@ if (os.path.isfile(input)):
 elif (os.path.isdir(input)):
     for filename in Path(input).rglob('*.fit'):
         export_manager(filename, output_dir, args.debug)
-        

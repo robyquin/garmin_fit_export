@@ -22,8 +22,7 @@ def test_validation_gpx(xml_path):
     print("Process: {}".format(xml_path))
     gpx_doc = etree.parse(xml_path)
 
-    if schema.validate(gpx_doc):
+    if (schema.validate(gpx_doc)):
         assert True
     else:
-        print(schema.error_log)
-        assert False
+        assert False, schema.error_log

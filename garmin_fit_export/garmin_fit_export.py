@@ -262,7 +262,7 @@ class GarminFitExport():
                             fgpx.write("\t\t<trkseg>\n")
                             lap += 1
             fgpx.write("\t\t</trkseg>\n")
-            fgpx.write("\t</trk>\n")            
+            fgpx.write("\t</trk>\n")
         elif (file_type == "course"):
             fgpx.write("\t<rte>\n")
             for elem in self.record.mesgs:
@@ -282,7 +282,7 @@ class GarminFitExport():
                 long = str(elem["position_long"])
                 name = str(elem["label"])
                 fgpx.write("\t<wpt lat=\"{}\" lon=\"{}\">\n\t\t<name>{}</name>\n\t</wpt>\n".format(lat, long, name))
-        
+
         fgpx.write("</gpx>")
         fgpx.close()
 
