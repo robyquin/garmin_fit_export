@@ -271,7 +271,7 @@ class GarminFitExport():
                                 fgpx.write("\t\t<trkseg>\n")
                                 lap += 1
                 fgpx.write("\t\t</trkseg>\n")
-                fgpx.write("\t</trk>\n")            
+                fgpx.write("\t</trk>\n")
             elif (file_type == "course"):
                 fgpx.write("\t<rte>\n")
                 for elem in self.record.mesgs:
