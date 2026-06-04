@@ -77,16 +77,16 @@ Thank you for your interest in contributing! Please follow these simple rules to
 
 ### Code Style
 
-- Follow PEP8
+- Follow PEP8: use `flake8`
 - Avoid overly long functions
 - Use clear and meaningful names
 <!-- - Use Black for formatting -->
 
-<!-- ### Tests
+### Tests
 
 - Use pytest
 - Add tests for every new feature
-- Ensure `pytest` runs without errors -->
+- Ensure `pytest` runs without errors
 
 ### Bug Reporting
 
