@@ -209,7 +209,7 @@ class GarminFitExport():
         Gpx file constructor.
 
         :param output_dir: absolute path to the directory output.
-        :param overwrite: allows overwriting gpx file
+        :param overwrite: permission to overwrite gpx output file.
         :param copy_fit: copy source file fit in directory output.
         """
         output_gpx = os.path.join(output_dir, self.get_description() + ".gpx")
@@ -291,116 +291,64 @@ class GarminFitExport():
                     long = str(elem["position_long"])
                     name = str(elem["label"])
                     fgpx.write("\t<wpt lat=\"{}\" lon=\"{}\">\n\t\t<name>{}</name>\n\t</wpt>\n".format(lat, long, name))
-                    lap += 1
-            fgpx.write("\t<trk>\n")
-            fgpx.write("\t\t<trkseg>\n")
-            lap = 1
-            for elem in self.record.mesgs:
-                if ("position_lat" in elem.keys() and "position_long" in elem.keys()):
-                    time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
-                    lat = str(elem["position_lat"])
-                    long = str(elem["position_long"])
-                    extensions = ''
-                    for other_k, other_v in elem.items():
-                        if (other_k in ('heart_rate', 'temperature', 'cadence', 'distance', 'power')):
-                            if (other_k == 'heart_rate'):
-                                other_k = 'gpxtpx:hr'
-                            elif (other_k == 'distance'):
-                                other_k = 'gpxtpx:depth'
-                            elif (other_k == 'temperature'):
-                                other_k = 'gpxtpx:atemp'
-                            elif (other_k == 'cadence'):
-                                other_k = 'gpxtpx:cad'
-                            elif (other_k == 'power'):
-                                other_k = 'gpxtpx:power'
-                            extensions += "\t\t\t\t\t\t<{}>{}</{}>\n".format(other_k, other_v, other_k)
-                    if (extensions != ''):
-                        extensions = "\t\t\t\t<extensions>\n\t\t\t\t\t<gpxtpx:TrackPointExtension>\n{}\t\t\t\t\t</gpxtpx:TrackPointExtension>\n\t\t\t\t</extensions>\n".format(extensions)
-                    if ("enhanced_altitude" in elem.keys()):
-                        elev = str(elem["enhanced_altitude"])
-                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, elev, time, extensions))
-                    else:
-                        fgpx.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, time, extensions))
-                    if (len(self.lap.mesgs) > lap):
-                        if (self.lap.mesgs[lap]['start_time'] < elem["timestamp"]):
-                            fgpx.write("\t\t</trkseg>\n")
-                            fgpx.write("\t\t<trkseg>\n")
-                            lap += 1
-            fgpx.write("\t\t</trkseg>\n")
-            fgpx.write("\t</trk>\n")
-        elif (file_type == "course"):
-            fgpx.write("\t<rte>\n")
-            for elem in self.record.mesgs:
-                if ("position_lat" in elem.keys() and "position_long" in elem.keys()):
-                    time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
-                    lat = str(elem["position_lat"])
-                    long = str(elem["position_long"])
-                    if ("enhanced_altitude" in elem.keys()):
-                        elev = str(elem["enhanced_altitude"])
-                        fgpx.write("\t\t\t<rtept lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n\t\t\t</rtept>\n".format(lat, long, elev, time))
-                    else:
-                        fgpx.write("\t\t\t<rtept lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n\t\t\t</rtept>\n".format(lat, long, time))
-            fgpx.write("\t</rte>\n")
-        elif (file_type == "location"):
-            for elem in self.location.mesgs:
-                lat = str(elem["position_lat"])
-                long = str(elem["position_long"])
-                name = str(elem["label"])
-                fgpx.write("\t<wpt lat=\"{}\" lon=\"{}\">\n\t\t<name>{}</name>\n\t</wpt>\n".format(lat, long, name))
 
-        fgpx.write("</gpx>")
-        fgpx.close()
+            fgpx.write("</gpx>")
+            fgpx.close()
+        else:
+            self.log.warning("Overwrite denied: {}".format(output_gpx))
 
-    def get_md(self, output_dir: str) -> None:
+    def get_md(self, output_dir: str, overwrite: bool = False) -> None:
         """
         Markdown file constructor.
 
         :param  output_dir: absolute path to the directory output.
+        :param overwrite: permission to overwrite markdown output file.
         """
         output_md = os.path.join(output_dir, self.get_description() + ".md")
 
-        self.log.info("Write: " + output_md)
-        file_type = self.file_id.get('type')
+        if (overwrite or not os.path.exists(output_md)):
+            self.log.info("Write: " + output_md)
+            file_type = self.file_id.get('type')
 
-        if (file_type == 'workout'):
             fmd = open(output_md, 'w')
-            fmd.write("# {}\n\n".format(self.get_description()))
-            fmd.write("|Item|Intensity|Exercise|Duration|\n")
-            fmd.write("|---|---|---|---|\n")
-            for elem in self.workout_step.mesgs:
-                # print(elem)
-                if ('duration_type' in elem.keys()):
-                    if ('intensity' in elem.keys()):
-                        if ('exercise_category' in elem.keys()):
-                            if (elem['duration_type'] == 'time'):
-                                fmd.write("|{}|**{}**|*{}*|{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['exercise_category'].capitalize(), self.record2str(elem['duration_value'], 'ms')))
+            if (file_type == 'workout'):
+                fmd.write("# {}\n\n".format(self.get_description()))
+                fmd.write("|Item|Intensity|Exercise|Duration|\n")
+                fmd.write("|---|---|---|---|\n")
+                for elem in self.workout_step.mesgs:
+                    # print(elem)
+                    if ('duration_type' in elem.keys()):
+                        if ('intensity' in elem.keys()):
+                            if ('exercise_category' in elem.keys()):
+                                if (elem['duration_type'] == 'time'):
+                                    fmd.write("|{}|**{}**|*{}*|{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['exercise_category'].capitalize(), self.record2str(elem['duration_value'], 'ms')))
+                                else:
+                                    fmd.write("|{}|**{}**|*{}*|{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['exercise_category'].capitalize(), elem['duration_value']))
                             else:
-                                fmd.write("|{}|**{}**|*{}*|{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['exercise_category'].capitalize(), elem['duration_value']))
-                        else:
-                            if (elem['duration_type'] == 'time'):
-                                fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), self.record2str(elem['duration_value'], 'ms')))
-                            elif (elem['duration_type'] == 'open'):
-                                fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['duration_type']))
-                            else:
-                                fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), self.record2str(elem['duration_value'], 'cm')))
-                    elif ('repeat_steps' in elem.keys()):
-                        fmd.write("|{}| **Repeat** | - |x{}|\n".format(elem['message_index'] + 1, elem['repeat_steps']))
-                else:
-                    fmd.write("|{}| - | - | - |\n".format(elem['message_index'] + 1))
+                                if (elem['duration_type'] == 'time'):
+                                    fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), self.record2str(elem['duration_value'], 'ms')))
+                                elif (elem['duration_type'] == 'open'):
+                                    fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), elem['duration_type']))
+                                else:
+                                    fmd.write("|{}|**{}**| - |{}|\n".format(elem['message_index'] + 1, elem['intensity'].capitalize(), self.record2str(elem['duration_value'], 'cm')))
+                        elif ('repeat_steps' in elem.keys()):
+                            fmd.write("|{}| **Repeat** | - |x{}|\n".format(elem['message_index'] + 1, elem['repeat_steps']))
+                    else:
+                        fmd.write("|{}| - | - | - |\n".format(elem['message_index'] + 1))
+            elif (file_type == 'record'):
+                fmd.write("# Device: {}\n\n".format(self.get_description().capitalize().replace('_', ' ')))
+                fmd.write("|Sport|Target|UTC|Record|\n")
+                fmd.write("|---|---|---|---|\n")
+                for r in self.record.mesgs:
+                    if ('record' in r.keys()):
+                        fmd.write("|**{}**|".format(r['sport'].capitalize()))
+                        if ('target' in r.keys()):
+                            fmd.write("${} m$|".format(r['target']))
+                        elif ('record_description' in r.keys()):
+                            fmd.write("{}|".format(r['record_description']))
+                        fmd.write("{}|{}|\n".format(r['timestamp'].isoformat(), self.record2str(r['record'], r['record_units'])))
+                    else:
+                        logging.warning("{} {} haven't record".format(r['timestamp'].isoformat(), r['sport']))
             fmd.close()
-        elif (file_type == 'record'):
-            fmd = open(output_md, 'w')
-            fmd.write("# Device: {}\n\n".format(self.get_description().capitalize().replace('_', ' ')))
-            fmd.write("|Sport|Target|UTC|Record|\n")
-            fmd.write("|---|---|---|---|\n")
-            for r in self.record.mesgs:
-                if ('record' in r.keys()):
-                    fmd.write("|**{}**|".format(r['sport'].capitalize()))
-                    if ('target' in r.keys()):
-                        fmd.write("${} m$|".format(r['target']))
-                    elif ('record_description' in r.keys()):
-                        fmd.write("{}|".format(r['record_description']))
-                    fmd.write("{}|{}|\n".format(r['timestamp'].isoformat(), self.record2str(r['record'], r['record_units'])))
-                else:
-                    logging.warning("{} {} haven't record".format(r['timestamp'].isoformat(), r['sport']))
-            fmd.close()
+        else:
+            self.log.warning("Overwrite denied: {}".format(output_md))
