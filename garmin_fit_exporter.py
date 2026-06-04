@@ -75,7 +75,13 @@ logging.info("Destination: {}".format(output_dir))
 
 if (os.path.isfile(input)):
     filename = str(input)
-    export_manager(filename, output_dir, args.debug, args.overwrite)
-elif (os.path.isdir(input)):
-    for filename in Path(input).rglob('*.fit'):
+    if (not output_dir.startswith(os.path.dirname(input)) and not os.path.dirname(input).startswith(output_dir)):
         export_manager(filename, output_dir, args.debug, args.overwrite)
+    else:
+        logging.error("For security reasons, the source directory and the destination directory cannot be nested.")
+elif (os.path.isdir(input)):
+    if (not output_dir.startswith(input) and not input.startswith(output_dir)):
+        for filename in Path(input).rglob('*.fit'):
+            export_manager(filename, output_dir, args.debug, args.overwrite)
+    else:
+        logging.error("For security reasons, the source directory and the destination directory cannot be nested.")
