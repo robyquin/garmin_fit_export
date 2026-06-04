@@ -155,10 +155,9 @@ class GarminFitExport():
 
         :param output_dir: absolute path to the directory output.
         """
-        filename_debug = os.path.join(output_dir, str(self.file_id.get('type')),
-                                      os.path.basename(self.__pathfile) + "_debug.txt")
-        self.log.info("Write: " + filename_debug)
         dir = os.path.join(output_dir, 'debug_files', str(self.file_id.get('type')))
+        filename_debug = os.path.join(dir, os.path.basename(self.__pathfile) + "_debug.txt")
+        self.log.info("Write: " + filename_debug)
         if (not os.path.exists(dir)):
             os.makedirs(dir)
         fp = open(filename_debug, 'w')
