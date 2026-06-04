@@ -45,7 +45,7 @@ Fit file types that are exported to **markdown**:
 ### Debug - option
 
 The `debug` option allows you to export all types of fit files in raw format.
-The output file will have the extension: **.fit_bak.txt**
+The output file will have the extension: **.fit_debug.txt**
 
 #### Main device
 
