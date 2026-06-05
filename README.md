@@ -53,67 +53,15 @@ The output file will have the extension: **.fit_bak.txt**
 
 ## CONTRIBUTING
 
-Thank you for your interest in contributing! Please follow these simple rules to keep the project organized and collaborative.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
-### Prerequisites
+## CODE OF CONDUCT
 
-- Python 3.10+
-
-### How to Propose a Change
-
-1. Fork the repository
-2. Create a dedicated branch (`git checkout -b feature/your-feature-name`)
-3. Implement your changes
-4. Ensure all tests pass
-5. Open a Pull Request with a clear description of what you did
-
-### Pull Request Rules
-
-- Keep PRs small and focused
-- Clearly describe the problem being solved
-- Link any related issues
-- Update documentation if needed
-- Ensure code is formatted and linted
-
-### Code Style
-
-- Follow PEP8: use `flake8`
-- Avoid overly long functions
-- Use clear and meaningful names
-<!-- - Use Black for formatting -->
-
-### Tests
-
-- Use pytest
-- Add tests for every new feature
-- Ensure `pytest` runs without errors
-
-### Bug Reporting
-
-When opening an issue, include:
-
-- Steps to reproduce
-- Expected behavior
-- Observed behavior
-- Environment details (OS, Python version, project version)
-
-### Feature Requests
-
-Please include:
-
-- Why the feature is useful
-- Who benefits from it
-- How it integrates into the project
-
-<!-- ### Code of Conduct
-
-This project follows the *Contributor Covenant*.
-Please act respectfully and professionally. -->
+See [CODE OF CONDUCT](./CODE_OF_CONDUCT.md) for details.
 
 ## LICENSE
 
-All rights reserved.
-License to be defined.
+See [LICENSE](./LICENSE) for details.
 
 ## AUTHOR
 
