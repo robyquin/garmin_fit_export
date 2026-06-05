@@ -4,7 +4,7 @@ Class Collection of FitMessages.
 
 :Author: Roberto Quintiliani
 :Copyright: Copyright (c) Roberto Quintiliani
-:License: to be defined
+:License: GPLv3 - see LICENSE
 
 """
 
