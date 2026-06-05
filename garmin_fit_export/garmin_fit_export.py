@@ -4,7 +4,7 @@ GarminFitExport: Garmin FIT file export and debug manager
 
 :Author: Roberto Quintiliani
 :Copyright: Copyright (c) Roberto Quintiliani
-:License: to be defined
+:License: GPLv3 - see LICENSE
 
 """
 
