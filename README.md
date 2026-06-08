@@ -17,14 +17,15 @@
 ## USAGE
 
 ```bash
-usage: garmin_fit_exporter.py [-h] -s SOURCE -d DESTINATION [-dg]
+usage: garmin_fit_exporter.py [-h] -s SOURCE -d DESTINATION [--overwrite] [--debug]
 
 options:
   -h, --help            show this help message and exit
   -s, --source SOURCE   file or directory source
   -d, --destination DESTINATION
                         directory destination
-  --debug          Export debug raw file
+  --overwrite           Permission to overwrite output file
+  --debug               Export debug raw file
 ```
 
 ### Gpx
