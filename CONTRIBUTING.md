@@ -51,7 +51,10 @@ Feel free to fork **garmin_fit_export** to make your own changes.
 
 ### Code Style
 
-- Use `flake8` to follow PEP8
+- Use **flake8** to follow _PEP8_
+  - `pip install flake8 flake8-pyproject`
+- Use **pydoclint** to follow _PEP257_
+  - `pip install pydoclint`
 - Avoid overly long functions
 - Use clear and meaningful names
 - Try to use explicit variable names
@@ -60,9 +63,9 @@ Feel free to fork **garmin_fit_export** to make your own changes.
 
 ### Tests
 
-- Use `pytest`
-- Add tests for every new feature in *test* folder
-- Ensure `pytest` runs without errors
+- Use **pytest** and ensure it runs without errors
+  - `pip install pytest`
+- Add tests for every new feature in _test_ folder
 
 ### Workflow
 

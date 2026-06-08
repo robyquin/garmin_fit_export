@@ -7,7 +7,7 @@
 ## REQUIRED
 
 - Hardware: *Garmin watch* + *USB connection*
-- Main library: `pip install garmin_fit_sdk`
+- Main library: `pip install garmin-fit-sdk`
 
 ## PROJECT STRUCTURE
 
@@ -17,14 +17,15 @@
 ## USAGE
 
 ```bash
-usage: garmin_fit_exporter.py [-h] -s SOURCE -d DESTINATION [-dg]
+usage: garmin_fit_exporter.py [-h] -s SOURCE -d DESTINATION [--overwrite] [--debug]
 
 options:
   -h, --help            show this help message and exit
   -s, --source SOURCE   file or directory source
   -d, --destination DESTINATION
                         directory destination
-  --debug          Export debug raw file
+  --overwrite           Permission to overwrite output file
+  --debug               Export debug raw file
 ```
 
 ### Gpx
@@ -45,7 +46,7 @@ Fit file types that are exported to **markdown**:
 ### Debug - option
 
 The `debug` option allows you to export all types of fit files in raw format.
-The output file will have the extension: **.fit_bak.txt**
+The output file will have the extension: **.fit_debug.txt**
 
 #### Main device
 

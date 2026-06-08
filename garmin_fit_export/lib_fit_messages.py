@@ -54,7 +54,7 @@ class FileId(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['file_id_mesgs']
 
 
@@ -64,7 +64,7 @@ class FileCreator(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['file_creator_mesgs']
 
 
@@ -74,7 +74,7 @@ class Event(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['event_mesgs']
 
 
@@ -84,7 +84,7 @@ class DeviceInfo(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['device_info_mesgs']
 
 
@@ -94,7 +94,7 @@ class DeviceSettings(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['device_settings_mesgs']
 
 
@@ -104,7 +104,7 @@ class UserProfile(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['user_profile_mesgs']
 
 
@@ -114,7 +114,7 @@ class Sport(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['sport_mesgs']
 
 
@@ -124,7 +124,7 @@ class TrainingSettings(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['training_settings_mesgs']
 
 
@@ -134,7 +134,7 @@ class ZonesTarget(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['zones_target_mesgs']
 
 
@@ -144,7 +144,7 @@ class Record(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['record_mesgs']
 
 
@@ -154,7 +154,7 @@ class Record2(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['record2_mesgs']
 
 
@@ -164,7 +164,7 @@ class GpsMetadata(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['gps_metadata_mesgs']
 
 
@@ -174,7 +174,7 @@ class Lap(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['lap_mesgs']
 
 
@@ -184,7 +184,7 @@ class TimeInZone(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['time_in_zone_mesgs']
 
 
@@ -194,7 +194,7 @@ class Split(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['split_mesgs']
 
 
@@ -204,7 +204,7 @@ class SplitSummary(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['split_summary_mesgs']
 
 
@@ -214,7 +214,7 @@ class Session(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['session_mesgs']
 
 
@@ -224,7 +224,7 @@ class Activity(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['activity_mesgs']
 
 
@@ -234,7 +234,7 @@ class Location(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['location_mesgs']
 
 
@@ -244,7 +244,7 @@ class Course(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['course_mesgs']
 
 
@@ -254,7 +254,7 @@ class Workout(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['workout_mesgs']
 
 
@@ -264,5 +264,5 @@ class WorkoutStep(FitMessages):
 
     :param mesgs: dict
     """
-    def __init__(self, mesgs):
+    def __init__(self, mesgs: dict):
         self.mesgs = mesgs['workout_step_mesgs']
