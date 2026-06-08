@@ -14,6 +14,7 @@ from . import lib_fit_messages as lfm
 import os
 import shutil
 from datetime import timedelta
+from typing import TextIO
 
 import logging
 logging.basicConfig(format='%(asctime)s - [%(levelname)s] %(message)s',
@@ -78,7 +79,7 @@ class GarminFitExport():
         """
         Decoder file FIT
 
-        :param absolute_path: absolute path to file FIT.
+        :param path_file_fit: absolute path to file FIT.
         """
         stream = gfs.Stream.from_file(path_file_fit)
         decoder = gfs.Decoder(stream)
@@ -105,7 +106,7 @@ class GarminFitExport():
         :param record: record value.
         :param unit: unit of measurement.
 
-        :return human-readable string.
+        :return: human-readable string.
         """
         if (unit == 'ms'):
             return str(timedelta(seconds=int(record / 1000.0)))
@@ -123,11 +124,11 @@ class GarminFitExport():
         """
         Get list of keys in messages
 
-        :return list of keys
+        :return: list of keys
         """
         return self._messages.keys()
 
-    def __debug_tree(self, archive: dict | list, fp, level: str = '') -> None:
+    def __debug_tree(self, archive: dict | list, fp: TextIO, level: str = '') -> None:
         """
         Debug tree constructor from fit file contents.
 

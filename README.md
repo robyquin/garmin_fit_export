@@ -7,7 +7,7 @@
 ## REQUIRED
 
 - Hardware: *Garmin watch* + *USB connection*
-- Main library: `pip install garmin_fit_sdk`
+- Main library: `pip install garmin-fit-sdk`
 
 ## PROJECT STRUCTURE
 

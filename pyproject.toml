@@ -1,0 +1,14 @@
+[tool.pydoclint]
+style = "sphinx"
+arg-type-hints-in-docstring = false
+check-return-types = false
+
+[tool.flake8]
+extend-ignore = ["E501"]
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-ra", "-q"]
+testpaths = [
+    "test",
+]
