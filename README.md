@@ -4,6 +4,8 @@
 
 - What do you need? *Your Garmin watch with a USB connection*
 
+![social_master](svg/garmin_fit_exporter.svg)
+
 ## REQUIRED
 
 - Hardware: *Garmin watch* + *USB connection*
