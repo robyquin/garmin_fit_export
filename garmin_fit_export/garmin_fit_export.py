@@ -138,17 +138,22 @@ class GarminFitExport():
         """
         if (isinstance(archive, dict)):
             for key, value in archive.items():
-                fp.write("\n{}'{}': ".format(level, key))
-                self.__debug_tree(value, fp, level + '\t')
+                if (isinstance(value, dict) or isinstance(value, list)):
+                    fp.write("{}<section type='{}' name='{}'>\n".format(level, type(value).__name__, key))
+                    self.__debug_tree(value, fp, level + '\t')
+                    fp.write("{}</section>\n".format(level))
+                else:
+                    fp.write("{}<item type='{}' name='{}' value='{}'>\n".format(level, type(value).__name__, key, value))
         elif (isinstance(archive, list)):
-            fp.write("(List) ")
             for value in archive:
                 if (isinstance(value, dict) or isinstance(value, list)):
+                    fp.write("{}<items type='{}'>\n".format(level, type(value).__name__))
                     self.__debug_tree(value, fp, level + '\t')
+                    fp.write("{}</items>\n".format(level))
                 else:
-                    fp.write("\n{}{}".format(level, value))
+                    fp.write("{}<item type='{}' name='other' value='{}'>\n".format(level, type(value).__name__, value))
         else:
-            fp.write("{}".format(archive))
+            fp.write("{}<unknown type='{}' name='{}'>\n".format(level, type(value).__name__, archive))
 
     def debug_tree(self, output_dir: str) -> None:
         """
@@ -157,12 +162,14 @@ class GarminFitExport():
         :param output_dir: absolute path to the directory output.
         """
         dir = os.path.join(output_dir, 'debug_files', str(self.file_id.get('type')))
-        filename_debug = os.path.join(dir, os.path.basename(self.__pathfile) + "_debug.txt")
+        filename_debug = os.path.join(dir, os.path.basename(self.__pathfile) + "_debug.xml")
         self.log.info("Write: " + filename_debug)
         if (not os.path.exists(dir)):
             os.makedirs(dir)
         fp = open(filename_debug, 'w')
-        self.__debug_tree(self._messages, fp)
+        fp.write("<debug type='{}'>\n".format(str(self.file_id.get('type'))))
+        self.__debug_tree(self._messages, fp, '\t')
+        fp.write("</debug>")
         fp.close()
 
     def get_filefit(self) -> str:
