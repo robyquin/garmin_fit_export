@@ -13,6 +13,7 @@ import pytest
 from pathlib import Path
 from lxml import etree
 
+
 @pytest.mark.parametrize('xml_path', Path('.').rglob('*.fit_debug.xml'))
 def test_validation_xml_debug(xml_path):
     print("Process: {}".format(xml_path))
