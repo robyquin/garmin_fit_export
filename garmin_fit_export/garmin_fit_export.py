@@ -14,6 +14,7 @@ from . import lib_fit_messages as lfm
 import os
 import shutil
 from datetime import timedelta
+import base64
 from typing import TextIO
 
 import logging
@@ -143,17 +144,30 @@ class GarminFitExport():
                     self.__debug_tree(value, fp, level + '\t')
                     fp.write("{}</section>\n".format(level))
                 else:
-                    fp.write("{}<item type='{}' name='{}' value='{}'>\n".format(level, type(value).__name__, key, value))
+                    if (isinstance(value, str)):
+                        fp.write("{}<item type='{}' name='{}' value='{}' />\n".format(level, type(value).__name__, key, value.replace("'", "_")))
+                    else:
+                        fp.write("{}<item type='{}' name='{}' value='{}' />\n".format(level, type(value).__name__, key, value))
         elif (isinstance(archive, list)):
             for value in archive:
                 if (isinstance(value, dict) or isinstance(value, list)):
                     fp.write("{}<items type='{}'>\n".format(level, type(value).__name__))
                     self.__debug_tree(value, fp, level + '\t')
                     fp.write("{}</items>\n".format(level))
+                elif (isinstance(value, str)):
+                    is_ascii = True
+                    for c in value.encode('utf-8'):
+                        if (c < 32 or c in (34, 39, 127)):
+                            is_ascii = False
+                            break
+                    if (is_ascii):
+                        fp.write("{}<item type='{}' name='other' value='{}' />\n".format(level, type(value).__name__, value.replace("'", "_")))
+                    else:
+                        fp.write("{}<item type='{}' name='other' value='{}' />\n".format(level, type(value).__name__, base64.b64encode(value.encode('utf-8')).decode()))
                 else:
-                    fp.write("{}<item type='{}' name='other' value='{}'>\n".format(level, type(value).__name__, value))
+                    fp.write("{}<item type='{}' name='other' value='{}' />\n".format(level, type(value).__name__, value))
         else:
-            fp.write("{}<unknown type='{}' name='{}'>\n".format(level, type(value).__name__, archive))
+            fp.write("{}<unknown type='{}' name='{}' />\n".format(level, type(value).__name__, archive))
 
     def debug_tree(self, output_dir: str) -> None:
         """
@@ -166,8 +180,8 @@ class GarminFitExport():
         self.log.info("Write: " + filename_debug)
         if (not os.path.exists(dir)):
             os.makedirs(dir)
-        fp = open(filename_debug, 'w')
-        fp.write("<debug type='{}'>\n".format(str(self.file_id.get('type'))))
+        fp = open(filename_debug, 'w', encoding='utf-8')
+        fp.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<debug type='{}'>\n".format(str(self.file_id.get('type'))))
         self.__debug_tree(self._messages, fp, '\t')
         fp.write("</debug>")
         fp.close()
