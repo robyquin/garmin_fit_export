@@ -35,7 +35,8 @@ def export_manager(filename: str, output_dir: str, debug: bool, overwrite: bool)
                 output = os.path.join(output_dir, file_type + "_gpx")
             if (not os.path.exists(output)):
                 os.makedirs(output)
-            act.get_gpx(output, overwrite, copy_fit=True)
+            # act.get_gpx(output, overwrite, copy_fit=True)
+            act.get_png(output, overwrite, copy_fit=True)
         elif (file_type in ('workout', 'record')):
             output = os.path.join(output_dir, file_type + "_md")
             if (not os.path.exists(output)):

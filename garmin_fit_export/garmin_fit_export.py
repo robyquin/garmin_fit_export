@@ -10,12 +10,14 @@ GarminFitExport: Garmin FIT file export and debug manager
 
 from .garmin_fit_sdk_upgrade import gfs
 from . import lib_fit_messages as lfm
+from .geo2pixel import CoordToPx
 
 import os
 import shutil
 from datetime import timedelta
 import base64
 from typing import TextIO
+from PIL import Image, ImageDraw, ImageFont
 
 import logging
 logging.basicConfig(format='%(asctime)s - [%(levelname)s] %(message)s',
@@ -59,7 +61,7 @@ class GarminFitExport():
             # self.time_in_zone = lfm.TimeInZone(self._messages)
             # self.split = lfm.Split(self._messages)
             # self.split_summary = lfm.SplitSummary(self._messages)
-            # self.session = lfm.Session(self._messages)
+            self.session = lfm.Session(self._messages)
             # self.activity = lfm.Activity(self._messages)
         elif (file_type == 'location'):
             self.location = lfm.Location(self._messages)
@@ -317,6 +319,96 @@ class GarminFitExport():
             fgpx.close()
         else:
             self.log.warning("Overwrite denied: {}".format(output_gpx))
+
+    def get_png(self, output_dir: str, overwrite: bool = False, copy_fit: bool = False) -> None:
+        """
+        PNG file constructor.
+
+        :param output_dir: absolute path to the directory output.
+        :param overwrite: permission to overwrite png output file.
+        :param copy_fit: copy source file fit in directory output.
+        """
+        output_png = os.path.join(output_dir, self.get_description() + ".png")
+        output_fit = os.path.join(output_dir, self.get_description() + ".fit")
+        myFont = ImageFont.load_default(size=20)
+        FontTitle = ImageFont.load_default(size=40)
+
+        if (copy_fit and not os.path.exists(output_fit)):
+            shutil.copyfile(self.__pathfile, output_fit)
+            self.log.info("Copy: {} --> {}".format(self.__pathfile, output_fit))
+
+        if (overwrite or not os.path.exists(output_png)):
+            self.log.info("Write: " + output_png)
+            file_type = self.file_id.get('type')
+
+            fpng = Image.new("RGBA", (1080, 1920), color='white')
+            draw = ImageDraw.Draw(fpng)
+
+            img_w, img_h = fpng.size
+            screen_w = screen_h = min(img_w, img_h)
+            padding_x = padding_y = 10
+            ddy = 90
+
+            if (file_type == 'activity'):
+                swc_lat = self.session.mesgs[0]['swc_lat']  # min_lat
+                nec_lat = self.session.mesgs[0]['nec_lat']  # max_lat
+                swc_lon = self.session.mesgs[0]['swc_long']  # min_lon
+                nec_lon = self.session.mesgs[0]['nec_long']  # max_lon
+                shape = []
+                for elem in self.record.mesgs:
+                    if ("position_lat" in elem.keys() and "position_long" in elem.keys()):
+                        x, y = CoordToPx(elem["position_lat"], elem["position_long"], screen_w - padding_x * 2, screen_h - padding_y * 2, swc_lat, nec_lat, swc_lon, nec_lon)
+                        shape.append((x + padding_x, y + padding_y + ddy))
+                        # time = elem["timestamp"].isoformat().replace('+00:00', 'Z')
+                        # lat = str(elem["position_lat"])
+                        # long = str(elem["position_long"])
+                        # extensions = ''
+                        # for other_k, other_v in elem.items():
+                        #     if (other_k in ('heart_rate', 'temperature', 'cadence', 'distance', 'power')):
+                        #         if (other_k == 'heart_rate'):
+                        #             other_k = 'gpxtpx:hr'
+                        #         elif (other_k == 'distance'):
+                        #             other_k = 'gpxtpx:depth'
+                        #         elif (other_k == 'temperature'):
+                        #             other_k = 'gpxtpx:atemp'
+                        #         elif (other_k == 'cadence'):
+                        #             other_k = 'gpxtpx:cad'
+                        #         elif (other_k == 'power'):
+                        #             other_k = 'gpxtpx:power'
+                        #         extensions += "\t\t\t\t\t\t<{}>{}</{}>\n".format(other_k, other_v, other_k)
+                        # if (extensions != ''):
+                        #     extensions = "\t\t\t\t<extensions>\n\t\t\t\t\t<gpxtpx:TrackPointExtension>\n{}\t\t\t\t\t</gpxtpx:TrackPointExtension>\n\t\t\t\t</extensions>\n".format(extensions)
+                        # if ("enhanced_altitude" in elem.keys()):
+                        #     elev = str(elem["enhanced_altitude"])
+                        #     fpng.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<ele>{}</ele>\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, elev, time, extensions))
+                        # else:
+                        #     fpng.write("\t\t\t<trkpt lat=\"{}\" lon=\"{}\">\n\t\t\t\t<time>{}</time>\n{}\t\t\t</trkpt>\n".format(lat, long, time, extensions))
+                # fpng.write("\t\t</trkseg>\n")
+                # fpng.write("\t</trk>\n")
+            draw.line(shape, fill='black', width=3)
+            if (len(self.lap.mesgs) > 1):
+                lap = 1
+                for elem in self.lap.mesgs:
+                    x, y = CoordToPx(elem["end_position_lat"], elem["end_position_long"], screen_w - padding_x * 2, screen_h - padding_y * 2, swc_lat, nec_lat, swc_lon, nec_lon)
+                    draw.circle((x + padding_x, y + padding_y + ddy), 5, fill="red", outline="black")
+                    name = "Lap " + str(lap)
+                    draw.text((x + padding_x, y + padding_y + ddy), name, font=myFont, fill=(255, 0, 0))
+                    lap += 1
+
+            # draw.rectangle([(0, 0), (img_w - 1, ddy)], outline='red')
+            # draw.rectangle([(0, ddy), (screen_w - 1, ddy + screen_h)], outline='red')
+            # draw.rectangle([(0, ddy + screen_h), (img_w - 1, img_h - 1)], outline='red')
+
+            draw.text((20, 20), self.get_description(), font=FontTitle, fill=(0, 0, 0))
+            i = 1
+            draw.text((20, 40 + ddy + screen_h), str(self.session.mesgs[0]['enhanced_avg_speed']), font=FontTitle, fill=(0, 0, 0))
+            i += 1
+            draw.text((20, 40 * i + ddy + screen_h), str(self.session.mesgs[0]['total_distance']), font=FontTitle, fill=(0, 0, 0))
+
+            fpng.save(output_png)
+            fpng.close()
+        else:
+            self.log.warning("Overwrite denied: {}".format(output_png))
 
     def get_md(self, output_dir: str, overwrite: bool = False) -> None:
         """
